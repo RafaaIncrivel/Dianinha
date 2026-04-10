@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Você ♡</title>
+
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║           MURAL DE ARTES - PRESENTE ESPECIAL ♡              ║
+  ╠══════════════════════════════════════════════════════════════╣
+  ║  COMO ADICIONAR DESENHOS:                                    ║
+  ║  1. Coloque os arquivos de imagem na pasta "imagens/"        ║
+  ║  2. Edite o array "drawings" lá embaixo no <script>         ║
+  ║  3. Suba no GitHub normalmente (git add, commit, push)       ║
+  ║                                                              ║
+  ║  ESTRUTURA DE PASTAS:                                        ║
+  ║  mural.html          <- este arquivo                         ║
+  ║  imagens/            <- coloque suas imagens aqui            ║
+  ║    desenho1.png                                              ║
+  ║    desenho2.jpg                                              ║
+  ║    ...                                                       ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+}
+
+/* ─────────────────────────────────────────────
+   FUNDO BLISS (Windows XP)
+───────────────────────────────────────────── */
+#bg {
+  position: fixed;
+  inset: 0;
+  background-image: url('https://i.imgur.com/vyYq5ae.jpeg');
+  background-size: cover;
+  background-position: center;
+  transition: filter 0.5s ease;
+  z-index: 0;
+}
+#bg.blurred {
+  filter: blur(16px) brightness(0.6) saturate(0.8);
+}
+
+/* ─────────────────────────────────────────────
+   ESTRELAS CADENTES / BRILHINHOS
+───────────────────────────────────────────── */
+#stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  pointer-events: none;
+  animation: shootingStar linear forwards;
+  will-change: transform, opacity;
+}
+
+.star-trail {
+  display: flex;
+  align-items: center;
+  transform-origin: right center;
+}
+
+.star-dot {
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, #ffe877 40%, rgba(255,220,0,0) 100%);
+  box-shadow: 0 0 4px 2px rgba(255,245,100,0.6);
+}
+
+.star-line {
+  height: 1.5px;
+  background: linear-gradient(to left, rgba(255,245,100,0.9), rgba(255,245,100,0));
+  border-radius: 1px;
+}
+
+@keyframes shootingStar {
+  0%   { opacity: 0; transform: translate(0, 0); }
+  8%   { opacity: 1; }
+  80%  { opacity: 0.7; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)); }
+}
+
+/* ─────────────────────────────────────────────
+   TELA DE STARTUP
+───────────────────────────────────────────── */
+#startup {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url('https://i.imgur.com/vyYq5ae.jpeg');
+  background-size: cover;
+  background-position: center;
+  transition: opacity 0.8s ease;
+}
+
+#startup::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.15);
+}
+
+.welcome-box {
+  position: relative;
+  width: 420px;
+  background: #ECE9D8;
+  border-radius: 8px 8px 4px 4px;
+  overflow: visible;
+  filter: drop-shadow(4px 8px 24px rgba(0,0,40,0.55));
+}
+
+.welcome-box-inner {
+  border-radius: 8px 8px 4px 4px;
+  overflow: hidden;
+  border: 3px solid #0A246A;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.5),
+    inset -1px -1px 0 rgba(0,0,100,0.3);
+}
+
+/* ─────────────────────────────────────────────
+   BARRA DE TÍTULO XP (azul clássica)
+───────────────────────────────────────────── */
+.xp-titlebar {
+  height: 30px;
+  background:
+    linear-gradient(to bottom,
+      #2CA5F5 0%,
+      #1675D6 3%,
+      #1262BD 8%,
+      #1E7DE8 18%,
+      #1E7DE8 45%,
+      #1363C2 85%,
+      #0A40A0 100%
+    );
+  display: flex;
+  align-items: center;
+  padding: 0 5px 0 6px;
+  position: relative;
+  user-select: none;
+}
+
+.xp-titlebar::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 3px;
+  right: 70px;
+  height: 45%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 100%);
+  border-radius: 4px 4px 0 0;
+  pointer-events: none;
+}
+
+.xp-title-icon { font-size: 13px; margin-right: 5px; }
+
+.xp-title-text {
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  font-family: Tahoma, Arial, sans-serif;
+  text-shadow: 1px 1px 2px rgba(0,0,60,0.7);
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.xp-buttons {
+  display: flex;
+  gap: 3px;
+  z-index: 1;
+}
+
+.xp-btn {
+  width: 22px;
+  height: 20px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.6);
+  border: 1px solid rgba(0,0,0,0.25);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+  font-family: 'Marlett', Tahoma, Arial;
+  font-size: 10px;
+}
+
+.xp-btn-min {
+  background: linear-gradient(to bottom, #5aaef5 0%, #2e7fd8 100%);
+}
+.xp-btn-max {
+  background: linear-gradient(to bottom, #5aaef5 0%, #2e7fd8 100%);
+}
+.xp-btn-close {
+  background: linear-gradient(to bottom, #ea6060 0%, #c01818 100%);
+  border-color: #7a1010;
+}
+
+/* ─────────────────────────────────────────────
+   CORPO DO DIALOG DE BOAS-VINDAS
+───────────────────────────────────────────── */
+.welcome-body {
+  padding: 28px 28px 24px;
+  background: #ECE9D8;
+  text-align: center;
+}
+
+.welcome-heart {
+  font-size: 52px;
+  display: block;
+  margin-bottom: 14px;
+  animation: heartbeat 1.6s ease-in-out infinite;
+  line-height: 1;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14%  { transform: scale(1.13); }
+  28%  { transform: scale(1); }
+  42%  { transform: scale(1.08); }
+  70%  { transform: scale(1); }
+}
+
+.welcome-title {
+  font-size: 20px;
+  color: #0A246A;
+  font-family: Tahoma, Arial, sans-serif;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.welcome-sub {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+/* Botão verde XP */
+.xp-green-btn {
+  background: linear-gradient(to bottom,
+    #6ccb38 0%,
+    #3ea018 50%,
+    #379512 51%,
+    #52ba28 100%
+  );
+  border: 1px solid #257010;
+  border-radius: 5px;
+  color: white;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 9px 28px;
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+  transition: filter 0.1s, transform 0.1s;
+  letter-spacing: 0.3px;
+}
+.xp-green-btn:hover  { filter: brightness(1.1); }
+.xp-green-btn:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.35); }
+
+/* ─────────────────────────────────────────────
+   GALERIA PRINCIPAL
+───────────────────────────────────────────── */
+#gallery {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+}
+
+/* ─────────────────────────────────────────────
+   BOTÃO NEXT (canto superior direito)
+───────────────────────────────────────────── */
+#next-btn {
+  display: none;
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 50;
+  background: linear-gradient(to bottom, #EDE9D6 0%, #D5CEBC 100%);
+  border: 2px solid #0A246A;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.7),
+    inset -1px -1px 0 rgba(0,0,80,0.2),
+    2px 3px 6px rgba(0,0,50,0.4);
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  color: #0A246A;
+  padding: 7px 22px;
+  cursor: pointer;
+  transition: filter 0.1s, transform 0.1s;
+  letter-spacing: 0.5px;
+}
+#next-btn:hover  { filter: brightness(1.06); }
+#next-btn:active { transform: translateY(1px); }
+
+/* ─────────────────────────────────────────────
+   JANELAS XP FLUTUANTES
+───────────────────────────────────────────── */
+.window-slot {
+  position: absolute;
+  transition: opacity 0.35s ease;
+}
+
+/* Esquerda */
+.slot-left {
+  left: 7%;
+  top: 50%;
+  animation: floatA 5s ease-in-out infinite;
+}
+/* Direita */
+.slot-right {
+  right: 7%;
+  top: 50%;
+  animation: floatB 5.8s ease-in-out infinite;
+  animation-delay: -2.4s;
+}
+
+@keyframes floatA {
+  0%, 100% { transform: translateY(calc(-50% - 14px)); }
+  50%       { transform: translateY(calc(-50% + 14px)); }
+}
+@keyframes floatB {
+  0%, 100% { transform: translateY(calc(-50% + 10px)); }
+  50%       { transform: translateY(calc(-50% - 10px)); }
+}
+
+/* Janela XP */
+.xp-window {
+  width: 500px;
+  background: #ECE9D8;
+  border-radius: 8px 8px 4px 4px;
+  border: 3px solid #0A246A;
+  box-shadow:
+    inset 2px 2px 0 rgba(255,255,255,0.4),
+    inset -1px -1px 0 rgba(0,0,120,0.2),
+    6px 12px 28px rgba(0,0,50,0.5),
+    0 2px 6px rgba(0,0,80,0.3);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.xp-window:hover {
+  box-shadow:
+    inset 2px 2px 0 rgba(255,255,255,0.5),
+    inset -1px -1px 0 rgba(0,0,120,0.2),
+    8px 14px 32px rgba(0,0,50,0.6),
+    0 2px 8px rgba(0,0,80,0.3);
+}
+
+.xp-window-body {
+  padding: 8px;
+  background: #ECE9D8;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Placeholder quando não há imagem */
+.xp-window-body.empty::after {
+  content: '♡';
+  font-size: 48px;
+  color: #C8C2B0;
+  opacity: 0.5;
+}
+
+.xp-window-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.xp-window:hover .xp-window-img {
+  transform: scale(1.02);
+}
+
+/* ─────────────────────────────────────────────
+   LIGHTBOX (clicou na janela)
+───────────────────────────────────────────── */
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+
+#lightbox.active {
+  display: flex;
+}
+
+#lightbox-img {
+  max-width: 88vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border: 4px solid #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 60px rgba(0,0,0,0.85);
+  animation: popIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.75); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+#lightbox-close {
+  position: fixed;
+  top: 14px;
+  right: 70px;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(to bottom, #ea6060 0%, #c01818 100%);
+  border: 2px solid #7a1010;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.4);
+  z-index: 201;
+  font-family: Tahoma, Arial;
+}
+
+/* ─────────────────────────────────────────────
+   TASKBAR XP (rodapé)
+───────────────────────────────────────────── */
+.xp-taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 34px;
+  background: linear-gradient(to bottom,
+    #2CA5F5 0%,
+    #1060BA 25%,
+    #0A52A8 75%,
+    #1872C0 100%
+  );
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  border-top: 1px solid #2c90e8;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
+}
+
+.xp-start-btn {
+  background: linear-gradient(to bottom,
+    #6ccb38 0%,
+    #3ea018 50%,
+    #379512 51%,
+    #52ba28 100%
+  );
+  border: 1px solid #257010;
+  border-radius: 12px;
+  color: white;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 4px 12px 4px 10px;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+  user-select: none;
+}
+
+.start-logo { font-size: 16px; }
+
+.xp-taskbar-right {
+  margin-left: auto;
+  background: rgba(0,0,0,0.15);
+  border: 1px solid rgba(0,0,150,0.3);
+  border-radius: 2px;
+  padding: 2px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.xp-clock {
+  color: white;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 11px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+  user-select: none;
+}
+
+/* ─────────────────────────────────────────────
+   CONTADOR DE PÁGINA
+───────────────────────────────────────────── */
+#page-indicator {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 11px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.5);
+  z-index: 50;
+  display: none;
+  user-select: none;
+  letter-spacing: 0.5px;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ FUNDO ══════════ -->
+<div id="bg"></div>
+
+<!-- ══════════ ESTRELAS ══════════ -->
+<div id="stars"></div>
+
+<!-- ══════════════════════════════════════════
+     TELA DE STARTUP
+════════════════════════════════════════════ -->
+<div id="startup">
+  <div class="welcome-box">
+    <div class="welcome-box-inner">
+      <div class="xp-titlebar">
+        <span class="xp-title-icon">♡</span>
+        <span class="xp-title-text">♡ Para Você - Mural de Artes</span>
+        <div class="xp-buttons">
+          <div class="xp-btn xp-btn-min">─</div>
+          <div class="xp-btn xp-btn-max">□</div>
+          <div class="xp-btn xp-btn-close">✕</div>
+        </div>
+      </div>
+      <div class="welcome-body">
+        <span class="welcome-heart">♡</span>
+        <div class="welcome-title">Bem-vinda ao Mural</div>
+        <div class="welcome-sub">
+          Desenhos feitos com carinho<br>só pra você ♡<br>
+          <span style="font-size:11px; color:#888;">Sempre sendo atualizado...</span>
+        </div>
+        <button class="xp-green-btn" onclick="enterGallery()">
+          ▶ &nbsp;Entrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GALERIA PRINCIPAL
+════════════════════════════════════════════ -->
+<div id="gallery">
+
+  <!-- Janela da esquerda -->
+  <div class="window-slot slot-left" id="slot1" style="opacity:0">
+    <div class="xp-window" onclick="openLightbox(0)">
+      <div class="xp-titlebar">
+        <span class="xp-title-icon">★</span>
+        <span class="xp-title-text" id="title1">Desenho</span>
+        <div class="xp-buttons">
+          <div class="xp-btn xp-btn-min">─</div>
+          <div class="xp-btn xp-btn-max">□</div>
+          <div class="xp-btn xp-btn-close">✕</div>
+        </div>
+      </div>
+      <div class="xp-window-body" id="body1">
+        <img class="xp-window-img" id="img1" src="" alt="Desenho" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Janela da direita -->
+  <div class="window-slot slot-right" id="slot2" style="opacity:0">
+    <div class="xp-window" onclick="openLightbox(1)">
+      <div class="xp-titlebar">
+        <span class="xp-title-icon">★</span>
+        <span class="xp-title-text" id="title2">Desenho</span>
+        <div class="xp-buttons">
+          <div class="xp-btn xp-btn-min">─</div>
+          <div class="xp-btn xp-btn-max">□</div>
+          <div class="xp-btn xp-btn-close">✕</div>
+        </div>
+      </div>
+      <div class="xp-window-body" id="body2">
+        <img class="xp-window-img" id="img2" src="" alt="Desenho" />
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Botão Next -->
+<button id="next-btn" onclick="nextPage()">Next &nbsp;▶</button>
+
+<!-- Indicador de página -->
+<div id="page-indicator"></div>
+
+<!-- ══════════ LIGHTBOX ══════════ -->
+<div id="lightbox" onclick="closeLightbox()">
+  <div id="lightbox-close" onclick="closeLightbox()" title="Fechar (ESC)">✕</div>
+  <img id="lightbox-img" src="" alt="Desenho em tamanho completo" onclick="event.stopPropagation()" />
+</div>
+
+<!-- ══════════ TASKBAR ══════════ -->
+<div class="xp-taskbar">
+  <div class="xp-start-btn">
+    <span class="start-logo">⊞</span> start
+  </div>
+  <div class="xp-taskbar-right">
+    <span style="font-size:12px;">🔊</span>
+    <span class="xp-clock" id="clock">00:00</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+  ★★★  CONFIGURE SEUS DESENHOS AQUI  ★★★
+  
+  Cada item é um objeto com:
+    src   → caminho para a imagem (ex: "imagens/desenho1.png")
+    title → texto que aparece na barra azul da janela
+  
+  Os desenhos aparecem 2 por vez. 
+  Clique em "Next" para avançar para os próximos 2.
+  
+  EXEMPLO:
+  { src: "imagens/fanart1.png",   title: "South Park ♡" },
+  { src: "imagens/surpresa.jpg",  title: "Desenho Especial" },
+  
+  Para aceitar qualquer formato: .jpg, .jpeg, .png, .gif, .webp
+════════════════════════════════════════════════════════════════ -->
+<script>
+const drawings = [
+  // ↓↓ ADICIONE SEUS DESENHOS ABAIXO ↓↓
+  // { src: "imagens/desenho1.png", title: "Teste 1 ♡" },
+  // { src: "imagens/desenho2.jpg", title: "Surpresa" },
+  // { src: "imagens/desenho3.png", title: "Fanart ♡" },
+  // ↑↑ ADICIONE SEUS DESENHOS ACIMA ↑↑
+];
+
+
+// ════════════════════════════════════════════════
+//  Lógica da galeria - não precisa editar abaixo
+// ════════════════════════════════════════════════
+
+let currentPage = 0;
+
+function totalPages() {
+  return drawings.length === 0 ? 1 : Math.ceil(drawings.length / 2);
+}
+
+function enterGallery() {
+  const s = document.getElementById('startup');
+  s.style.opacity = '0';
+  s.style.pointerEvents = 'none';
+  setTimeout(() => {
+    s.style.display = 'none';
+    document.getElementById('gallery').style.display = 'block';
+    document.getElementById('next-btn').style.display = 'block';
+    document.getElementById('page-indicator').style.display = 'block';
+    updateWindows(true);
+  }, 800);
+}
+
+function updateWindows(initial) {
+  const d1 = drawings[currentPage * 2];
+  const d2 = drawings[currentPage * 2 + 1];
+
+  const slot1  = document.getElementById('slot1');
+  const slot2  = document.getElementById('slot2');
+  const body1  = document.getElementById('body1');
+  const body2  = document.getElementById('body2');
+  const img1   = document.getElementById('img1');
+  const img2   = document.getElementById('img2');
+  const title1 = document.getElementById('title1');
+  const title2 = document.getElementById('title2');
+
+  if (d1 && d1.src) {
+    slot1.style.opacity = '1';
+    slot1.style.pointerEvents = 'auto';
+    img1.src = d1.src;
+    img1.style.display = 'block';
+    title1.textContent = d1.title || 'Desenho';
+    body1.classList.remove('empty');
+  } else {
+    slot1.style.opacity = '0';
+    slot1.style.pointerEvents = 'none';
+    body1.classList.add('empty');
+    img1.style.display = 'none';
+  }
+
+  if (d2 && d2.src) {
+    slot2.style.opacity = '1';
+    slot2.style.pointerEvents = 'auto';
+    img2.src = d2.src;
+    img2.style.display = 'block';
+    title2.textContent = d2.title || 'Desenho';
+    body2.classList.remove('empty');
+  } else {
+    slot2.style.opacity = '0';
+    slot2.style.pointerEvents = 'none';
+    body2.classList.add('empty');
+    img2.style.display = 'none';
+  }
+
+  // Indicador
+  const pi = document.getElementById('page-indicator');
+  if (drawings.length > 0) {
+    pi.textContent = `${currentPage + 1} / ${totalPages()}`;
+  } else {
+    pi.textContent = '';
+  }
+}
+
+function nextPage() {
+  if (drawings.length === 0) return;
+  const slots = document.querySelectorAll('.window-slot');
+  slots.forEach(s => {
+    s.style.transition = 'opacity 0.3s ease';
+    s.style.opacity = '0';
+  });
+  setTimeout(() => {
+    currentPage = (currentPage + 1) % totalPages();
+    updateWindows();
+    slots.forEach(s => { s.style.transition = 'opacity 0.5s ease'; });
+  }, 300);
+}
+
+// ─── Lightbox ───────────────────────────────
+function openLightbox(slotIndex) {
+  const d = drawings[currentPage * 2 + slotIndex];
+  if (!d || !d.src) return;
+  document.getElementById('bg').classList.add('blurred');
+  document.getElementById('lightbox-img').src = d.src;
+  document.getElementById('lightbox').style.display = 'flex';
+  requestAnimationFrame(() => {
+    document.getElementById('lightbox').classList.add('active');
+  });
+}
+
+function closeLightbox() {
+  document.getElementById('bg').classList.remove('blurred');
+  document.getElementById('lightbox').classList.remove('active');
+  setTimeout(() => {
+    document.getElementById('lightbox').style.display = 'none';
+  }, 200);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight' || e.key === ' ') nextPage();
+});
+
+// ─── Relógio ────────────────────────────────
+function updateClock() {
+  const n = new Date();
+  const h = String(n.getHours()).padStart(2, '0');
+  const m = String(n.getMinutes()).padStart(2, '0');
+  document.getElementById('clock').textContent = h + ':' + m;
+}
+updateClock();
+setInterval(updateClock, 5000);
+
+// ─── Estrelas Cadentes ──────────────────────
+function spawnStar() {
+  const container = document.getElementById('stars');
+  const el = document.createElement('div');
+  el.className = 'star';
+
+  // Posição de início (parte superior/direita)
+  const startX = 30 + Math.random() * (window.innerWidth - 60);
+  const startY = Math.random() * (window.innerHeight * 0.55);
+
+  // Ângulo diagonal entre 200° e 250° (canto inferior esquerdo)
+  const angle  = (200 + Math.random() * 50) * Math.PI / 180;
+  const dist   = 280 + Math.random() * 360;
+  const dx     = Math.cos(angle) * dist;
+  const dy     = Math.sin(angle) * dist;
+  const dur    = 2.2 + Math.random() * 3.5;
+
+  // Tamanho
+  const dotSize  = 3 + Math.random() * 4;
+  const trailLen = 30 + Math.random() * 70;
+
+  el.style.left = startX + 'px';
+  el.style.top  = startY + 'px';
+  el.style.setProperty('--dx', dx + 'px');
+  el.style.setProperty('--dy', dy + 'px');
+  el.style.animationDuration  = dur + 's';
+  el.style.animationDelay     = '0s';
+  el.style.transform = `rotate(${(Math.atan2(dy, dx) * 180 / Math.PI)}deg)`;
+
+  const trail = document.createElement('div');
+  trail.className = 'star-trail';
+
+  const line = document.createElement('div');
+  line.className = 'star-line';
+  line.style.width = trailLen + 'px';
+
+  const dot = document.createElement('div');
+  dot.className = 'star-dot';
+  dot.style.width  = dotSize + 'px';
+  dot.style.height = dotSize + 'px';
+  dot.style.flexShrink = '0';
+
+  trail.appendChild(line);
+  trail.appendChild(dot);
+  el.appendChild(trail);
+  container.appendChild(el);
+
+  setTimeout(() => el.remove(), (dur + 0.2) * 1000);
+}
+
+// Lança estrelas em intervalos variados
+setInterval(spawnStar, 1200);
+setTimeout(spawnStar, 100);
+setTimeout(spawnStar, 500);
+setTimeout(spawnStar, 900);
+</script>
+</body>
+</html>
+
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║                    TUTORIAL COMPLETO                             ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║                                                                  ║
+  ║  1. ADICIONAR UM DESENHO:                                        ║
+  ║     a) Crie uma pasta chamada "imagens" no mesmo lugar           ║
+  ║        que este arquivo mural.html                               ║
+  ║     b) Coloque o arquivo de imagem dentro de "imagens/"          ║
+  ║     c) Abra este arquivo e encontre o array "drawings"           ║
+  ║     d) Adicione uma linha no formato:                            ║
+  ║        { src: "imagens/nomedoarquivo.png", title: "Titulo" },    ║
+  ║                                                                  ║
+  ║  2. SUBIR NO GITHUB:                                             ║
+  ║     git add .                                                    ║
+  ║     git commit -m "novo desenho"                                 ║
+  ║     git push                                                     ║
+  ║     → Ative o GitHub Pages nas configurações do repositório!     ║
+  ║       (Settings > Pages > Source: main / root)                   ║
+  ║                                                                  ║
+  ║  3. PERSONALIZAR TÍTULO:                                         ║
+  ║     Troque o campo title: "Seu Texto Aqui"                       ║
+  ║     Pode usar emojis também! ex: title: "South Park ♡"           ║
+  ║                                                                  ║
+  ║  4. TROCAR A MENSAGEM DA TELA DE ABERTURA:                       ║
+  ║     Procure por "welcome-title" e "welcome-sub" no HTML          ║
+  ║     e edite o texto ali dentro.                                  ║
+  ║                                                                  ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
